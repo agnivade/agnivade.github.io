@@ -1,0 +1,31 @@
+# visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
+
+paginate: 5 # pagination based on number of posts
+paginate_path: "page:num"
+exclude: ["README.md"] # files to exclude
+highlighter: pygments
+markdown: kramdown
+disqus: agniva
+gems: [jekyll-paginate]
+
+defaults:
+  -
+    scope:
+      path: "" # empty string for all files
+    values:
+      title: dbyll
+
+description: Stylish Jekyll Theme
+author:
+  name: agniva
+  email: agniva.quicksilver@gmail.com
+  github: agnivade
+  linkedin: asd123
+  bio: Your stylish, minimalist theme!
+  email_md5: 54922e2c8625044a184735f06579c4c8
+
+rss_path: feed.xml
+categories_path: categories.html
+tags_path: tags.html
+
+BASE_PATH:
