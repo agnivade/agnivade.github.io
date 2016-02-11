@@ -148,112 +148,52 @@
 
   <span class="post-date">
     
-    November
-    15th,
+    February
+    11th,
     
-    2013
+    2016
   </span>
 
   <h2>
-    <a href="/general/setup/demo/2013/11/15/hello-world.html">Hello World!</a>
+    <a href="/react/2016/02/11/react-jquery.html">Mixing React and jQuery</a>
   </h2>
 
   <div>
     
-    <p><strong>dbyll</strong> is minimalist, stylish theme for jekyll. Supports gravatar, account links (github, twitter, e-mail, pinterest, résume file) and a bio.</p>
+    <p>Recently, I was doing a client project and got a chance to build a site. I decided this would be the perfect opportunity for me to build it in React and sharpen my React skills. Adventure time !</p>
 
-<p><strong>dbyll</strong> is brought to you by <strong><a href="http://ismaildemirbilek.com">dbtek</a></strong>. Open sourced under <a href="http://opensource.org/licenses/MIT">MIT</a> license.</p>
+<p>Then site was coming up nice and smooth. But being a hardcore jQuery guy, I couldn’t resist myself from using jQuery here and there. The alternative was to spending more effort in reading React docs and implementing everything in React way. Well, you can guess what was about to happen.</p>
 
-<h3 id="dbyll-is-on-github">dbyll is on GitHub</h3>
+<p>I was stuck with this weird error -
+<code>
+Invariant Violation: ..... This probably means the DOM was unexpectedly mutated (e.g. by the browser).
+</code></p>
 
-<p><a class="btn btn-default" href="https://github.com/dbtek/dbyll">Grab your copy now!</a></p>
+<p>A quick search gave me links to</p>
 
-    
-  </div>
+<ul>
+  <li><a href="https://github.com/facebook/react/issues/997">https://github.com/facebook/react/issues/997</a></li>
+  <li><a href="http://stackoverflow.com/questions/27776780/react-js-invariant-violation-findcomponentroot">http://stackoverflow.com/questions/27776780/react-js-invariant-violation-findcomponentroot</a></li>
+  <li><a href="http://stackoverflow.com/questions/25026399/uncaught-error-invariant-violation-findcomponentroot-110-unable-to">http://stackoverflow.com/questions/25026399/uncaught-error-invariant-violation-findcomponentroot-110-unable-to</a></li>
+</ul>
 
-</article>
+<p>But none of these solved my issue. I just had a faint idea that it had to be something related to DOM manipulation and my intermixing of jQuery with React was the culprit.</p>
 
+<p>After hours of playing cat and mouse with the bug, I finally located it. It was in these lines -</p>
 
-<article class="home">
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#poPreviewContainer&quot;</span><span class="p">).</span><span class="nx">empty</span><span class="p">();</span>
+<span class="nx">POPreviewRendered</span> <span class="o">=</span> <span class="nx">React</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="o">&lt;</span><span class="nx">POPreviewDialog</span>
+    <span class="nx">poData</span><span class="o">=</span><span class="p">{</span><span class="k">this</span><span class="p">.</span><span class="nx">props</span><span class="p">.</span><span class="nx">poData</span><span class="p">}</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;poPreviewContainer&#39;</span><span class="p">));</span></code></pre></figure>
 
-  <span class="post-date">
-    
-    November
-    15th,
-    
-    2013
-  </span>
+<p>Basically, there is a dialog that I am dynamically populating everytime with new data and putting it inside a div to be shown in the browser. Now, being the jQuery user that I am, I did a <code>.empty()</code> on the div and did a <code>React.render</code> to re-render the new dialog. And it turns out React does not like someone else to empty divs without telling it.</p>
 
-  <h2>
-    <a href="/general/setup/demo/2013/11/15/configuration.html">Configuration</a>
-  </h2>
+<p>The solution was to use React specific function calls to empty the div.</p>
 
-  <div>
-    
-    <p>In your config file change these settings</p>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">React</span><span class="p">.</span><span class="nx">unmountComponentAtNode</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;poPreviewContainer&#39;</span><span class="p">));</span></code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">title</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">dbyll</span>
-<span class="l-Scalar-Plain">author</span><span class="p-Indicator">:</span>  
-  <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">yourname</span>  
-  <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">youremail</span>  
-  <span class="l-Scalar-Plain">github</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">asd123</span>  
-  <span class="l-Scalar-Plain">twitter</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">asd123</span>  
-  <span class="l-Scalar-Plain">pinterest</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">asd123</span>  
-  <span class="l-Scalar-Plain">linkedin</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">asd123</span>  
-  <span class="l-Scalar-Plain">resume</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">asd123</span>  
-  <span class="l-Scalar-Plain">bio</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Your stylish,  minimalist theme!</span>  
-  <span class="l-Scalar-Plain">email_md5</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">md5ofemail</span>  </code></pre></figure>
+<p>A gentle reminder to those of you migrating from jQuery to React. Always think in React. And try to ditch jQuery completely. And if you can’t, have a look at posts like these to help you out :)</p>
 
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    November
-    14th,
-    
-    2013
-  </span>
-
-  <h2>
-    <a href="/general/demo/2013/11/14/sample.html">Sample</a>
-  </h2>
-
-  <div>
-    
-    
-    Sample placeholder post.
-    
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    November
-    14th,
-    
-    2013
-  </span>
-
-  <h2>
-    <a href="/general/demo/sample/2013/11/14/sample-2.html">Sample 2</a>
-  </h2>
-
-  <div>
-    
-    
-    Sample placeholder post.
-    
     
   </div>
 
