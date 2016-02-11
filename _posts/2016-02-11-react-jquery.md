@@ -30,6 +30,7 @@ After hours of playing cat and mouse with the bug, I finally located it. It was 
 $("#poPreviewContainer").empty();
 POPreviewRendered = React.render(<POPreviewDialog
     poData={this.props.poData}
+    poItems={this.props.poItems} />,
     document.getElementById('poPreviewContainer'));
 {% endhighlight %}
 
