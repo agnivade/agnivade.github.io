@@ -9,7 +9,7 @@ comments: true
 
 Recently, I was doing a client project and got a chance to build a site. I decided this would be the perfect opportunity for me to build it in React and sharpen my React skills. Adventure time !
 
-Then site was coming up nice and smooth. But being a hardcore jQuery guy, I couldn't resist myself from using jQuery here and there. The alternative was to spending more effort in reading React docs and implementing everything in React way. Well, you can guess what was about to happen.
+The site was coming up nice and smooth. But being a hardcore jQuery guy, I couldn't resist myself from using jQuery here and there. The alternative was to spending more effort in reading React docs and implementing everything in React way. Well, you can guess what was about to happen.
 
 I was stuck with this weird error -
 ```
