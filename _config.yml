@@ -1,6 +1,6 @@
 # visit https://github.com/mojombo/jekyll/wiki/Configuration for more settings
 
-title: Agniva's blog
+title: Agniva
 paginate: 5 # pagination based on number of posts
 paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
@@ -14,15 +14,15 @@ defaults:
     scope:
       path: "" # empty string for all files
     values:
-      title: agniva
+      title: ""
 
 description: Stylish Jekyll Theme
 author:
-  name: agniva
+  name: Agniva De Sarker
   email: agniva.quicksilver@gmail.com
   github: agnivade
   linkedin: agniva-de-sarker-44032646
-  bio: I have a blog too !
+  bio: My journal on Software, Bugs, Tips & Tricks.
   email_md5: c3a4dae421978681021aa65035ea852d
 
 rss_path: feed.xml
