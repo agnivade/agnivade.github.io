@@ -26,7 +26,6 @@ FileUploads.insert(buffer);
 {% endhighlight %}
 
 I found myself stuck with this error when I tried to use the insert function with the generated data.
-
 ```
 DataMan constructor requires a type argument when passed a Buffer
 ```
