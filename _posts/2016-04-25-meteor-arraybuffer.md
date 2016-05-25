@@ -30,7 +30,7 @@ I found myself stuck with this error when I tried to use the insert function wit
 DataMan constructor requires a type argument when passed a Buffer
 ```
 
-This is actually a mistake in the documentation here - <https://github.com/CollectionFS/Meteor-CollectionFS#initiate-the-upload> which says the insert function accepts a Buffer object at the server side. It doesn't. It accepts a file object with its data set as a buffer object along with a mime type.
+This is actually a mistake in the documentation here - <https://github.com/CollectionFS/Meteor-CollectionFS#initiate-the-upload> which says the insert function accepts a Buffer object at the server side. It doesn't. Issue raised [here](https://github.com/CollectionFS/Meteor-CollectionFS/issues/420). It accepts a file object with its data set as a buffer object along with a mime type.
 
 Here is how to get it done-
 
@@ -70,3 +70,5 @@ $.ajax({
 {% endhighlight %}
 
 Any comments and feedback is most appreciated
+
+Update (May 25th, 2016): I just saw that the author of the repo has stopped from maintaining the project. Sorry to hear it. Its still a great library and I hope will help users who might still use this.
