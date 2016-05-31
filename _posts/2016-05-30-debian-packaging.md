@@ -7,7 +7,11 @@ fullview: true
 comments: true
 ---
 
-## Back story
+### Required background
+
+I assume you have installed a debian package atleast once in your life. And you are reading this because you want to know how they are created or you want to actually create one.
+
+### Back story
 
 Over my career as a software engineer, there were several times I had to create a debian package. I always managed to avoid learning how to actually create it by sometimes using company internal tools and sometimes [fpm](https://github.com/jordansissel/fpm).
 
@@ -15,7 +19,7 @@ Recently, I had the opportunity to create a debian package to deploy a project f
 
 As usual, I looked through the couple of blog posts on the internet. But most of them had the same "man page" look and feel. And I absolutely dread man pages. But without getting discouraged, I decided to plough through. I came across [this](http://tldp.org/HOWTO/html_single/Debian-Binary-Package-Building-HOWTO/) page which finally gave me some much needed clarity.
 
-## Into the real stuff !
+### Into the real stuff !
 
 So, these are the things that I wanted to happen when I did `dpkg -i ` on my package -
 
@@ -108,7 +112,13 @@ Gets executed before removing the package.
 
 Gets executed after removing the package. You usually want to execute clean up tasks in this script.
 
-## TLDR
+### Taking a step further
+
+As you can figure, this entire process can be easily automated and made a part of your build system. Just create the required parent folders and put the source code and config files at the right places. Also have the files of the `DEBIAN` folder stored somewhere in your repo, which you can copy to the target folder.
+
+Since, I had a Node project, I mapped it to my `"scripts":{"build": "<command_to_run>"}` in `package.json` file. You can apply it similarly for projects in other programming languages too.
+
+### TLDR
 
 Just to recap quickly -
 
@@ -119,6 +129,7 @@ Just to recap quickly -
 
 Keep in mind, this is the bare minimum you need to create a debian package. Ideally, you would also want to add a copyright file, a changelog and a man page. There is a tool called [lintian](https://lintian.debian.org/) that you can use to follow the best practices around creating debian packages.
 
+Hope this intro was helpful. As usual, comments and feedback are always appreciated !
 
 
 
