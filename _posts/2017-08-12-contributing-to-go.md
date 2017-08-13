@@ -38,7 +38,7 @@ The CL had to be abandoned.
 
 But I learnt a lot along the way, adding new tools like `benchstat` and `benchcmp` under my belt. Moreover, now I was comfortable with the whole process. So there was no harm in trying again. :sweat_smile:
 
-A few days back, I found out that instead of doing an `fmt.Sprintf()` with strings, a string concat is a lot faster. I started searching for a victim, and it didn't take much time. It was the `archive/tar` package. The `formatPAXRecord` function in `archive/tar/strconv.go` has a line like this -
+A few days back, I found out that instead of doing an `fmt.Sprintf()` with strings, a string concat is a lot faster. I started searching for a victim, and it didn't take much time. It was the `archive/tar` package. The `formatPAXRecord` function in `archive/tar/strconv.go` has some code like this -
 
 {% highlight go %}
 size := len(k) + len(v) + padding
