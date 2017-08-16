@@ -59,7 +59,7 @@ name             old allocs/op  new allocs/op  delta
 FormatPAXRecord      8.00 ± 0%      6.00 ± 0%  -25.00%  (p=0.000 n=10+10)
 ```
 
-The rest, as they say, is history :stuck_out_tongue_closed_eyes:. This time, [Joe](github.com/dsnet) reviewed it. And after some small improvements, it got merged ! Yay ! I was a Go contributor. From being an average open source contributor, I actually made a contribution to the Go programming language.
+The rest, as they say, is history :stuck_out_tongue_closed_eyes:. This time, [Joe](https://github.com/dsnet) reviewed it. And after some small improvements, it got merged ! Yay ! I was a Go contributor. From being an average open source contributor, I actually made a contribution to the Go programming language.
 
 This is no way the end for me. I am starting to grasp the language much better and will keep sending CLs as and when I find things to do. Full marks to the Go team for tirelessly managing such a complex project so beautifully.
 
