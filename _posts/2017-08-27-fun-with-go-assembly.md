@@ -11,7 +11,7 @@ This is a recount of an adventure where I experimented with some Go assembly cod
 
 ## Some context
 
-The reason for optimizing the math.Atan2 function is because my current work involves performing some math calculations. And the math.Atan2 call was in the hot path. Therefore, it was coming up as a hot spot in the cpu profiles. Now, usually, I don't look beyond trying to optimize what the standard library is already doing, but just for the heck of it, I tried to see if there are any ways in which the calculation can be done faster.
+The reason for optimizing the `math.Atan2` function is because my current work involves performing some math calculations. And the `math.Atan2 call was in the hot path. Therefore, it was coming up as a hot spot in the cpu profiles. Now, usually, I don't look beyond trying to optimize what the standard library is already doing, but just for the heck of it, I tried to see if there are any ways in which the calculation can be done faster.
 
 And that led me to this SO [link](https://stackoverflow.com/a/23097989). So, there seems to be an FMA operation which does a fused-multiply-add in a single step. That is very interesting. Then, looking into Go, I found that this is an open [issue](https://github.com/golang/go/issues/8037) which is yet to be implemented in the Go assembler. That means, the Go code is still doing normal multiply-add inside the `math.Atan2` call. This seemed like something that can be optimized. Atleast, it was worth a shot to see if there are considerable gains.
 
