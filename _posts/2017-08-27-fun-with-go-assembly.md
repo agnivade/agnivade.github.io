@@ -42,7 +42,7 @@ Now, the next target was to convert this into adding `float64` variables. Now ke
 
 <img src="http://leedshackspace.org.uk/wp-content/uploads/2014/05/i-have-no-idea-what-im-doing-dog.jpg" />
 
-After some hit and trial and sifting through some Go code, I got to a working version.
+After some hit and trial and sifting through some Go code, I got to a working version. Note that, this adds 3 variables instead of 2. This was to prepare the example for the FMA instruction.
 
 ```
 TEXT ·add(SB),$0
