@@ -207,6 +207,7 @@ DEPENDENCIES
   jekyll
   jekyll-paginate
   pygments.rb
+  rouge
 
 BUNDLED WITH
-   1.11.2
+   1.16.0
