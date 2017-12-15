@@ -14,7 +14,7 @@ I thought it would be as simple as detaching the volume, setting the new values 
 
 ### Disclaimer:
 
-This is nearly taken verbatim from Matt Berther's post https://matt.berther.io/2015/02/03/how-to-resize-aws-ec2-ebs-volumes/ combined with [@sinnardem](https://matt.berther.io/2015/02/03/how-to-resize-aws-ec2-ebs-volumes/#comment-2581261172)'s suggestion. But I have showed the actual command outputs and updated some steps from my experience following the process.
+This is nearly taken verbatim from Matt Berther's post [https://matt.berther.io/2015/02/03/how-to-resize-aws-ec2-ebs-volumes/](https://matt.berther.io/2015/02/03/how-to-resize-aws-ec2-ebs-volumes) combined with [@sinnardem](https://matt.berther.io/2015/02/03/how-to-resize-aws-ec2-ebs-volumes/#comment-2581261172)'s suggestion. But I have showed the actual command outputs and updated some steps from my experience following the process.
 
 _Note:_ This worked for me on an Ubuntu 16.04 OS. YMMV. Proceed with caution. __Take a snapshot of your volume before you do anything.__
 
