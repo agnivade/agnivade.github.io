@@ -60,7 +60,7 @@ message ClientMessage {
 }
 ```
 
-Yes, using gogoproto, you cannot use protocol buffer 3 because it does not support extensions. There is an active [issue](https://github.com/gogo/protobuf/issues/324) open which discusses this in further detail.
+Yes, using gogoproto, you cannot use proto3 if you intend to share your protobuf definitions with languages which do not support proto2, like php. That's because proto3 does not support extensions. There is an active [issue](https://github.com/gogo/protobuf/issues/324) open which discusses this in further detail.
 
 To generate the .pb.go file is not immediately straightforward. You have to set the proper proto_path, which took me some time to figure out.
 
