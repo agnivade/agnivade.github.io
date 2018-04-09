@@ -132,9 +132,9 @@ Either set the field to `NOT NULL`. Or if that is not possible, use the `coalesc
 
 
 ```
-test=> update non_sensitive.users set metadata=jsonb_set(coalesce(metadata, '{}'), '{category}', '""') where id=1;
+test=> update users set metadata=jsonb_set(coalesce(metadata, '{}'), '{category}', '""') where id=1;
 UPDATE 1
-test=> select metadata from non_sensitive.users where id=1;
+test=> select metadata from users where id=1;
      metadata
 ------------------
  {"category": ""}
