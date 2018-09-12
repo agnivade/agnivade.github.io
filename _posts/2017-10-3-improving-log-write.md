@@ -38,9 +38,9 @@ func BenchmarkLogger(b *testing.B) {
 
 If we look into the cpu profile from this benchmark -
 
-![profile-println]({{"/assets/marked.png" | absolute_url}})
+![profile-println]({{"/assets/marked.png" | relative_url}})
 
-Its hard to figure out what's going on. But the key takeaway here is that huge portion of the function calls circled in red is what's happening from the `Sprintln` call. If you zoom in to the attached svg [here]({{"/assets/profile001.svg" | absolute_url}}), you can see lot of time being spent on getting and putting back the buffer to the pool and some more time being spent on formatting the string.
+Its hard to figure out what's going on. But the key takeaway here is that huge portion of the function calls circled in red is what's happening from the `Sprintln` call. If you zoom in to the attached svg [here]({{"/assets/profile001.svg" | relative_url}}), you can see lot of time being spent on getting and putting back the buffer to the pool and some more time being spent on formatting the string.
 
 Now, if we compare this to a benchmark by directly calling the `Output` function -
 
@@ -54,7 +54,7 @@ func BenchmarkLogger(b *testing.B) {
 }
 ```
 
-![profile-output]({{"/assets/profile002.png" | absolute_url}})
+![profile-output]({{"/assets/profile002.png" | relative_url}})
 
 Bam. The entire portion due to the `SPrintln` call is gone.
 

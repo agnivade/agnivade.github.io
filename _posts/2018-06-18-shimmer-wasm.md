@@ -74,11 +74,11 @@ This makes the DOM incredibly heavy and requires passing a huge string from Go t
 
 For a JPEG image of size 100KB, the time it takes for it to apply the transformation is around 180-190ms. The time increases with the size of the image. This is using Chrome 65. (FF has been giving me some errors which I didnt have time to investigate into :sweat_smile:).
 
-![timings]({{"/assets/wasm1.png" | absolute_url}})
+![timings]({{"/assets/wasm1.png" | relative_url}})
 
 Performance snapshots show something similar.
 
-![perf]({{"/assets/wasm2.png" | absolute_url}})
+![perf]({{"/assets/wasm2.png" | relative_url}})
 
 The heap can be quite huge. A heap snapshot resulted in about 1GB size.
 
