@@ -47,7 +47,7 @@ AWS stores all your data in EBS (Elastic Block Storage) which allows detaching v
 
 	Attach `new-volume` to this machine at /dev/sdg which will become /dev/xvdg1.
 
-	It will take some time to attach because the machines are running. Do not attach while the machine is shut down because it will take the `original-volume` to be the root partition and boot into it. We do not want that. (This happened to me).
+	It will take some time to attach because the machines are running. Do NOT attach while the machine is shut down because it will take the `original-volume` to be the root partition and boot into it. We do not want that. (This happened to me).
 
 	We want the root partition to be the separate 8G disk of the t2.micro machine, and have 2 separate partitions to work with.
 
@@ -139,7 +139,7 @@ AWS stores all your data in EBS (Elastic Block Storage) which allows detaching v
 
 18. Detach both volumes.
 
-19. Attach the `new-volume` to your original machine.
+19. Attach the `new-volume` to your original machine, and mount it as your boot device (/dev/sda1).
 
 20. Login to the machine. You will see that the hostname is set to the machine from where you created the volume. We need to set to the original hostname.
 
