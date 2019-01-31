@@ -9,7 +9,7 @@ comments: true
 
 The Go toolchain has the `vet` command which can be used to to perform static checks on a codebase. But a significant problem of `vet` was that it was not extensible. `vet` was structured as a monolithic executable with a fixed suite of checkers. To overcome this, the ecosystem started developing its own tools like [staticcheck](https://github.com/dominikh/go-tools) and [go-critic](https://github.com/go-critic/go-critic). The problem with this is that every tool has its own way to load and parse the source code. Hence, a checker written for one tool would require extensive effort to be able to run on a different driver.
 
-With the 1.12 release, Go has a new API for static code analysis- the `golang.org/x/tools/go/analysis` package. This creates a standard API for writing Go static analyzers, which allows them to be easily shared with the rest of the ecosystem in a plug-and-play model.
+During the 1.12 release cycle, a new API for static code analysis was developed: the `golang.org/x/tools/go/analysis` package. This creates a standard API for writing Go static analyzers, which allows them to be easily shared with the rest of the ecosystem in a plug-and-play model.
 
 In this post, we will see how to go about writing an analyzer using this new API.
 
@@ -27,13 +27,13 @@ It's the middle of the night and I need to add a new column. I quickly change th
 
 It seems like things are fine, but I have just missed a `$5`. This bugged me so much that I wanted to write a vet analyzer for this to detect patterns like these and flag them.
 
-There are other semantic checks we can apply like matching the no. of positional args with the no. of params passed and so on. But we will just focus on the most basic check of verifying whether a sql query is syntactically correct or not.
+There are other semantic checks we can apply like matching the number of positional args with the number of params passed and so on. But in this post, we will just focus on the most basic check of verifying whether a sql query is syntactically correct or not.
 
 ### Layout of an analyzer
 
 All analyzers usually expose a global variable `Analyzer` of type `analysis.Analyzer`. It is this variable which is imported by driver packages.
 
-Let us see what it looks like -
+Let us see what it looks like:
 
 ```go
 var Analyzer = &analysis.Analyzer{
@@ -47,7 +47,7 @@ var Analyzer = &analysis.Analyzer{
 
 Most of the fields are self-explanatory. The actual analysis is performed by `run`: a function which takes an `analysis.Pass` as an argument. The `pass` variable provides information to the `run` function to perform its tasks and optionally pass on information to other analyzers.
 
-It looks like -
+It looks like:
 
 ```go
 func run(pass *analysis.Pass) (interface{}, error) {
@@ -67,7 +67,7 @@ import (
 func main() { singlechecker.Main(sqlargs.Analyzer) }
 ```
 
-Upon successfully compiling this, you can execute the binary as a standalone tool on your codebase - `sqlargs ./...`.
+Upon successfully compiling this, you can execute the binary as a standalone tool on your codebase: `sqlargs ./...`.
 
 This is the standard layout of all analyzers. Let us have a look into the internals of the `run` function, which is where the main code analysis is performed.
 
@@ -75,11 +75,17 @@ This is the standard layout of all analyzers. Let us have a look into the intern
 
 Our primary aim is to look for expressions like `db.Exec("<query>")` in the code base and analyze them. This requires knowledge of Go ASTs (Abstract Syntax Tree) to slice and dice the source code and extract the stuff that we need.
 
-To help us with scavenging the codebase and filtering the AST expressions that we need, we have some tools at our disposal, viz. the `go/ast/inspector` package. This package does all the heavy lifting of loading and parsing the source code and just passes on the specified `node` types that we want. Since this is a very common task for all analyzers, we have an `inspect` pass which returns an analyzer that provides an `inspector`.
+To help us with scavenging the codebase and filtering the AST expressions that we need, we have some tools at our disposal, viz. the `go/ast/inspector` package. This package does all the heavy lifting of loading and parsing the source code and just passes on the specified `node` types that we want. Since this is a very common task for all analyzers, we have an `inspect` pass which returns an `inspector` for a given `pass`.
 
-Let us see how that looks like -
+Let us see how that looks like:
 
 ```go
+import (
+	"golang.org/x/tools/go/analysis"
+	"golang.org/x/tools/go/analysis/passes/inspect"
+	"golang.org/x/tools/go/ast/inspector"
+)
+
 func run(pass *analysis.Pass) (interface{}, error) {
 	inspect := pass.ResultOf[inspect.Analyzer].(*inspector.Inspector)
 	// We filter only function calls.
@@ -96,7 +102,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 All expressions of the form of `db.Exec("<query>")` are called [CallExpr](https://godoc.org/go/ast#CallExpr)s. So we specify that in our `nodeFilter`. After that, the `Preorder` function will give us only `CallExpr`s found in the codebase.
 
-A [CallExpr](https://godoc.org/go/ast#CallExpr) has two parts- Fun and Args. A Fun can either be an [Ident](https://godoc.org/go/ast#Ident) (for eg. `Fun()`) or a [SelectorExpr](https://godoc.org/go/ast#SelectorExpr) (for eg. `foo.Fun()`). Since we are looking for patterns like `db.Exec`, we need to filter only `SelectorExpr`s.
+A [CallExpr](https://godoc.org/go/ast#CallExpr) has two parts- `Fun` and `Args`. A `Fun` can either be an [Ident](https://godoc.org/go/ast#Ident) (for example `Fun()`) or a [SelectorExpr](https://godoc.org/go/ast#SelectorExpr) (for example `foo.Fun()`). Since we are looking for patterns like `db.Exec`, we need to filter only `SelectorExpr`s.
 
 ```go
 inspect.Preorder(nodeFilter, func(n ast.Node) {
@@ -109,9 +115,9 @@ inspect.Preorder(nodeFilter, func(n ast.Node) {
 })
 ```
 
-Alright, so far so good. This means we have filtered all expressions of the form of `type.Method()` from the source code. Now we need to verify 2 things -
+Alright, so far so good. This means we have filtered all expressions of the form of `type.Method()` from the source code. Now we need to verify 2 things:
 1. The function name is `Exec`; because that is what we are interested in.
-2. The type of the selector is `sql.DB`.
+2. The type of the selector is `sql.DB`. (To keep things simple, we will ignore the case when `sql.DB` is embedded in another struct).
 
 Let us peek into the [SelectorExpr](https://godoc.org/go/ast#SelectorExpr) to get these. A `SelectorExpr` again has two parts- `X` and `Sel`. If we take an example of `db.Exec()`- then `db` is `X`, and `Exec` is `Sel`. Matching the function name is easy. But to get the type info, we need to take help of `analysis.Pass` passed in the `run` function.
 
@@ -131,16 +137,13 @@ inspect.Preorder(nodeFilter, func(n ast.Node) {
 		return
 	}
 
-	var nTyp *types.Named
-	switch t := typ.Type.(type) {
-	case *types.Pointer:
-		// If it is a pointer, get the element
-		nTyp = t.Elem().(*types.Named)
-	case *types.Named:
-		nTyp = t
+	t := typ.Type
+	// If it is a pointer, get the element.
+	if ptr, ok := t.(*types.Pointer); ok {
+		t = ptr.Elem()
 	}
-
-	if nTyp == nil {
+	nTyp, ok := t.(*types.Named)
+	if !ok {
 		return
 	}
 })
@@ -150,13 +153,13 @@ Now, from `nTyp` we can get the type info of `X` and directly match the function
 
 ```go
 // Get the function name
-sel.Sel.Name // == Exec
+sel.Sel.Name // == "Exec"
 
 // Get the object name
-nTyp.Obj().Name() // == DB
+nTyp.Obj().Name() // == "DB"
 
 // Check the import of the object
-nTyp.Obj().Pkg().Path() // == database/sql
+nTyp.Obj().Pkg().Path() // == "database/sql"
 ```
 
 ### Extract the query string
@@ -177,7 +180,7 @@ if !ok || typ.Value == nil {
 _ = constant.StringVal(typ.Value) // Gives us the query string ! (constant is from "go/constant")
 ```
 
-Note that this doesn't work if the query string is a variable. A lot of codebases have a query template string and generate the final query string dynamically. So for eg.
+Note that this doesn't work if the query string is a variable. A lot of codebases have a query template string and generate the final query string dynamically. So, for example, the following will not be caught by our analyzer:
 
 ```go
 q := `SELECT %s FROM certificates WHERE date=$1;`
@@ -185,9 +188,7 @@ query := fmt.Sprintf(q, table)
 db.Exec(query, date)
 ```
 
-will not work.
-
-All that is left is for us to check the query string for syntax errors. We will use the `github.com/lfittl/pg_query_go` package for that. And if we get an error, `pass` has a `Reportf` helper method to print out diagnostics found during a vet pass. So -
+All that is left is for us to check the query string for syntax errors. We will use the `github.com/lfittl/pg_query_go` package for that. And if we get an error, `pass` has a `Reportf` helper method to print out diagnostics found during a vet pass. So:
 
 ```go
 query := constant.StringVal(typ.Value)
@@ -223,16 +224,13 @@ func run(pass *analysis.Pass) (interface{}, error) {
 			return
 		}
 
-		var nTyp *types.Named
-		switch t := typ.Type.(type) {
-		case *types.Pointer:
-			// If it is a pointer, get the element
-			nTyp = t.Elem().(*types.Named)
-		case *types.Named:
-			nTyp = t
+		t := typ.Type
+		// If it is a pointer, get the element.
+		if ptr, ok := t.(*types.Pointer); ok {
+			t = ptr.Elem()
 		}
-
-		if nTyp == nil {
+		nTyp, ok := t.(*types.Named)
+		if !ok {
 			return
 		}
 
@@ -263,7 +261,7 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 The `golang.org/x/tools/go/analysis/analysistest` package provides several helpers to make testing of vet passes a breeze. We just need to have our sample code that we want to test in a package. That package should reside inside the `testdata` folder which acts as the GOPATH for the test.
 
-Let's say we have a file `basic.go` which contains `db.Exec` function calls that we want to test. So the folder structure needed is -
+Let's say we have a file `basic.go` which contains `db.Exec` function calls that we want to test. So the folder structure needed is:
 
 ```
 testdata
@@ -273,7 +271,7 @@ testdata
 
 ```
 
-To verify expected diagnostics, we just need to add comments of the form `// want ".."` beside the line which is expected to throw the error. So for eg, this is what the file `basic.go` might look like-
+To verify expected diagnostics, we just need to add comments of the form `// want ".."` beside the line which is expected to throw the error. So for example, this is what the file `basic.go` might look like-
 
 ```go
 func runDB() {
@@ -306,10 +304,9 @@ func TestBasic(t *testing.T) {
 To quickly recap-
 
 1. We saw the basic layout of all analyzers.
-2. We used the inspect pass to filter the AST nodes that we want.
+2. We used the `inspect` pass to filter the AST nodes that we want.
 3. Once we got our node, we used the `pass.TypesInfo.Type` map to give us type information about an object.
 4. We used that to verify that the received object comes from the `database/sql` package and is of type `*sql.DB`.
 5. Then we extracted the first argument from the `CallExpr` and checked whether the string is a valid SQL query or not.
 
-This was a short demo of how to go about writing a vet analyzer. Of course, sql strings do not need to appear in `Exec` functions, nor does the type need to be `*sql.DB`. But I have kept things simple for the sake of the article. The full source code is available [here](https://github.com/agnivade/sqlargs). Please feel free to download and run `sqlargs` on your codebase. If you find a mistake in the article, please feel free to point it out in the comments !
-
+This was a short demo of how to go about writing a vet analyzer. Note that sql strings can also appear in other libraries like [sqlx](https://github.com/jmoiron/sqlx) or [gorm](https://github.com/jinzhu/gorm). Matching objects only with type of `*sql.DB` is not enough. One needs to maintain a list of type and method names to be matched. But I have kept things simple for the sake of the article. The full source code is available [here](https://github.com/agnivade/sqlargs). Please feel free to download and run `sqlargs` on your codebase. If you find a mistake in the article, please do point it out in the comments !
