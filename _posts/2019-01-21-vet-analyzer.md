@@ -75,7 +75,7 @@ This is the standard layout of all analyzers. Let us have a look into the intern
 
 Our primary aim is to look for expressions like `db.Exec("<query>")` in the code base and analyze them. This requires knowledge of Go ASTs (Abstract Syntax Tree) to slice and dice the source code and extract the stuff that we need.
 
-To help us with scavenging the codebase and filtering the AST expressions that we need, we have some tools at our disposal, viz. the `go/ast/inspector` package. This package does all the heavy lifting of loading and parsing the source code and just passes on the specified `node` types that we want. Since this is a very common task for all analyzers, we have an `inspect` pass which returns an `inspector` for a given `pass`.
+To help us with scavenging the codebase and filtering the AST expressions that we need, we have some tools at our disposal, viz. the `go/ast/inspector` package. Using this, we just specify the `node` type in the source code that we are interested in and it does the rest. Since this is a very common task for all analyzers, we have an `inspect` pass which returns an `inspector` for a given `pass`.
 
 Let us see how that looks like:
 
