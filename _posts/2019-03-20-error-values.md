@@ -7,6 +7,10 @@ fullview: true
 comments: true
 ---
 
+__UPDATE July 1, 2019__: The proposal has changed since the blog post was written. Stack traces have been omitted. Now, only the `Unwrap`, `Is` and `As` functions are kept. Also the `%w` format verb can be used to wrap errors. More information [here](https://github.com/golang/go/issues/29934#issuecomment-489682919).
+
+__Original article follows:__
+
 There is a new error values [proposal](https://go.googlesource.com/proposal/+/master/design/29934-error-values.md#stack-frames) for the Go programming language which enhances the `errors` and `fmt` packages, adding ability to wrap errors and embed stack traces, amongst other changes. The changes are now available in the master branch and undergoing the [feedback process](https://blog.golang.org/go2-here-we-come).
 
 I wanted to give it a spin and see how does it address some of the issues I've had while using errors. For posterity, I am using the master branch at `go version devel +e96c4ace9c Mon Mar 18 10:50:57 2019 +0530 linux/amd64`.
