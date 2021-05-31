@@ -143,3 +143,9 @@ And that was a very basic overview of the PGM index. There are further variants 
 I have also created a port of the algorithm in Go [here](https://github.com/agnivade/pgm) to understand the algorithm better. It's just a prototype, and suffers from minor approximation issues. For a production-ready library, refer to the author's C++ implementation [here](https://github.com/gvinciguerra/PGM-index).
 
 Lastly, I would like to thank [Giorgio](https://github.com/gvinciguerra) for taking the time to explain some aspects of the paper which I found hard to follow. His guidance has been a indispensable part in my understanding of the paper.
+
+**Links:**
+
+- Paper: [http://www.vldb.org/pvldb/vol13/p1162-ferragina.pdf](http://www.vldb.org/pvldb/vol13/p1162-ferragina.pdf)
+- C++ implementation: [https://github.com/gvinciguerra/PGM-index](https://github.com/gvinciguerra/PGM-index)
+- Website: [https://pgm.di.unipi.it](https://pgm.di.unipi.it)
