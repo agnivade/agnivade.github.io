@@ -3,7 +3,7 @@
 title: Agniva
 paginate: 5 # pagination based on number of posts
 paginate_path: "page:num"
-exclude: ["README.md"] # files to exclude
+exclude: ["README.md", "vendor"] # files to exclude
 highlighter: rouge
 markdown: kramdown
 disqus: agniva
